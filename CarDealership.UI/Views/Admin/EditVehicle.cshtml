@@ -1,0 +1,399 @@
+﻿@model CarDealership.Models.ViewModels.EditVehicleViewModel
+@{
+    ViewBag.Title = "EditVehicle";
+}
+
+<h2>EditVehicle</h2>
+
+@using (Html.BeginForm("EditVehicle", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <br />
+
+    @Html.ValidationSummary("", new { @class = "text-danger", id = "errorMessages" })
+
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            @Html.HiddenFor(m => m.VehicleId)
+            @Html.HiddenFor(m => m.ImageFileName)
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Make)
+                @Html.DropDownListFor(m => m.Make,
+                       Enumerable.Empty<SelectListItem>(),
+                       new { @class = "form-control", id = "MakeDropDownList", @onchange = "loadModelDropdown()" })
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Type)
+                @Html.DropDownListFor(m => m.Type,
+                       new List<SelectListItem>
+                       {
+                            new SelectListItem { Text="New", Value="New", Selected=true },
+                            new SelectListItem { Text="Used", Value="Used" },
+                       },
+                       new { @class = "form-control", id = "TypeTextBox", @onchange = "validateMileage()" })
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Year, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.Year, new { @class = "form-control", id = "YearTextBox", @onchange = "validateYear()" })
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Color)
+                @Html.DropDownListFor(m => m.Color,
+                       new List<SelectListItem>
+                       {
+                            new SelectListItem { Text="Black", Value="Black", Selected=true },
+                            new SelectListItem { Text="Blue", Value="Blue" },
+                            new SelectListItem { Text="Silver", Value="Silver" },
+                            new SelectListItem { Text="Red", Value="Red" },
+                            new SelectListItem { Text="White", Value="White" },
+                       },
+                       new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Mileage, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.Mileage, new { @class = "form-control", id = "MileageTextBox", @onchange = "validateMileage()" })
+            </div>
+
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.MSRP, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.MSRP, new { @class = "form-control", id = "MSRPTextBox", @onchange = "validateSalePrice()" })
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Model)
+                @Html.DropDownListFor(m => m.Model,
+                       Enumerable.Empty<SelectListItem>(),
+                       new { @class = "form-control", @id = "ModelDropDownList" })
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.BodyStyle)
+                @Html.DropDownListFor(m => m.BodyStyle,
+                       new List<SelectListItem>
+                       {
+                            new SelectListItem { Text="Car", Value="Car", Selected=true },
+                            new SelectListItem { Text="SUV", Value="SUV" },
+                            new SelectListItem { Text="Truck", Value="Truck" },
+                            new SelectListItem { Text="Van", Value="Van" },
+                       },
+                       new { @class = "form-control" })
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Transmission)
+                @Html.DropDownListFor(m => m.Transmission,
+                       new List<SelectListItem>
+                       {
+                            new SelectListItem { Text="Automatic", Value="Automatic", Selected=true },
+                            new SelectListItem { Text="Manual", Value="Manual" },
+                       },
+                       new { @class = "form-control" })
+            </div>
+
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Interior)
+                @Html.DropDownListFor(m => m.Interior,
+                       new List<SelectListItem>
+                       {
+                            new SelectListItem { Text="Black", Value="Black", Selected=true },
+                            new SelectListItem { Text="Blue", Value="Blue" },
+                            new SelectListItem { Text="Silver", Value="Silver" },
+                            new SelectListItem { Text="Red", Value="Red" },
+                            new SelectListItem { Text="White", Value="White" },
+                       },
+                       new { @class = "form-control" })
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.VIN, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.VIN, new { @class = "form-control" })
+
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.SalePrice, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.SalePrice, new { @class = "form-control", id = "SalePriceTextBox", @onchange = "validateSalePrice()" })
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Description, new { @class = "control-label" })
+
+                @Html.TextAreaFor(m => m.Description, 6, 20, new { @class = "form-control" })
+
+            </div>
+
+            <p><img src="@Url.Content("~/Images/Vehicles/" + Model.ImageFileName)"></p>
+
+            <div class="form-group">
+                <label>Replace Picture</label>
+                <input type="file" name="ImageUpload" id="ImageUpload" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                @if (Model.FeaturedVehicle)
+                {
+                    @Html.CheckBoxFor(m => m.FeaturedVehicle, htmlAttributes: new { @checked = true })
+                }
+                else
+                {
+                    @Html.CheckBoxFor(m => m.FeaturedVehicle)
+                }
+
+                @Html.LabelFor(m => m.FeaturedVehicle)
+            </div>
+
+            <div class="form-group">
+
+                <input type="button" class="btn btn-danger" value="Delete" onclick="deleteVehicle()" />
+                <input type="submit" class="btn btn-default" value="Save" />
+
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            formatPriceValues();
+
+            loadMakeDropdown();
+
+        });
+
+         function loadMakeDropdown() {
+
+             var makeDropdown = $("#MakeDropDownList");
+             var modelDropDown = $('#ModelDropDownList');
+             var selectedMake = "@Model.Make";
+             var selectedModel = "@Model.Model";
+
+            $.ajax({
+                type: 'GET',
+                url: 'https://localhost:44395/api/vehicle/makes',
+                success: function (makeArray) {
+                    makeDropdown.empty();
+                    modelDropDown.empty();
+
+                    $.each(makeArray, function (index, make) {
+
+                        if (make == selectedMake) {
+                            makeDropdown.append(new Option(make, make, true, true));
+                        }
+                        else {
+                            makeDropdown.append(new Option(make, make, false, false));
+                        }
+
+                    });
+
+                    loadModelDropdown();
+                },
+                error: function () {
+                    writeErrorMsg('Error calling web service for getting list of makes. Please try again later.');
+
+                }
+            });
+        }
+
+        function loadModelDropdown() {
+            var selectedMake = "@Model.Make";
+            var selectedModel = "@Model.Model";
+            var makeinDropdownChosen = $("#MakeDropDownList").val();
+
+            var modelDropDown = $('#ModelDropDownList');
+
+            if (selectedMake == "") { // To account for scenario when user selects 'Select Make' after selecting other options
+
+                $("#errorMessages").empty();
+                modelDropDown.empty();
+            }
+            else {
+
+                $("#errorMessages").empty();
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://localhost:44395/api/vehicle/make/' + makeinDropdownChosen,
+                    success: function (modelArray) {
+                        modelDropDown.empty();
+
+
+                        $.each(modelArray, function (index, model) {
+                            if (model == selectedModel) {
+                                modelDropDown.append(new Option(model, model, true, true));
+                            }
+                            else {
+                                modelDropDown.append(new Option(model, model, false, false));
+                            }
+                        });
+                    },
+                    error: function () {
+                        writeErrorMsg('Error calling web service getting list of models. Please try again later.');
+
+                    }
+                });
+            }
+        }
+
+        function deleteVehicle() {
+
+            if (!confirm("Are you sure you want to delete this Vehicle Record?")) {
+        return false;
+    }
+
+    $.ajax({
+        type: 'DELETE',
+        url: 'https://localhost:44395/api/vehicle/delete/' + @Model.VehicleId,
+        success: function () {
+            window.location.href = '@Url.Action("Index", "Home")';
+        }
+
+    });
+
+
+
+        }
+
+        function formatPriceValues() { // This will remove the zeroes after decimal in the msrp and sale price numbers
+
+            var msrp = $("#MSRPTextBox").val();
+            var saleprice = $("#SalePriceTextBox").val();
+
+            $("#MSRPTextBox").val(Math.trunc(msrp));
+            $("#SalePriceTextBox").val(Math.trunc(saleprice));
+        }
+
+        function validateSalePrice() {
+
+
+            $("#errorMessages").empty();
+
+            var msrp = $("#MSRPTextBox").val();
+            var saleprice = $("#SalePriceTextBox").val();
+
+
+            if (IsNumeric(msrp))
+                IsNumeric(saleprice);
+
+            var msrpNum = parseInt(msrp);
+            var saleNum = parseInt(saleprice);
+
+            if (saleNum > msrpNum && msrp != '') {
+                writeErrorMsg("Sale Price must not be greater than MSRP");
+                return false;
+            }
+
+        }
+
+                function writeErrorMsg(errorMsg) {
+            $("#errorMessages")
+                .append($('<li>')
+                    .attr({ class: 'list-group-item list-group-item-danger' })
+                    .text(errorMsg));
+        }
+
+        function validateYear() {
+
+            $("#errorMessages").empty();
+
+            var year = $("#YearTextBox").val();
+
+            IsNumeric(year);
+
+            if (year.length != 4) {
+                writeErrorMsg("Year is not proper. Please check");
+                return false;
+            }
+            var current_year = new Date().getFullYear();
+            if ((year < 2000) || (year > current_year + 1)) {
+                writeErrorMsg("Year should be in range 2000 to current year + 1");
+                return false;
+            }
+            return true;
+        }
+
+        function validateMileage() {
+
+            $("#errorMessages").empty();
+
+            var mileage = $("#MileageTextBox").val();
+            var type = $("#TypeTextBox").val();
+
+
+
+            IsNumeric(mileage);
+
+
+            if (type == "New" && mileage > 1000 && mileage != "") { // mileage != "" takes care of scenario when Type is changed and Mileage box is empty
+                writeErrorMsg("For new cars, mileage should be between 0 and 1000");
+                return false;
+            }
+
+            if (type == "Used" && mileage < 1000 && mileage != "") {
+                writeErrorMsg("For used cars, mileage should be between greater than 1000");
+                return false;
+            }
+
+        }
+
+        function IsNumeric(value) {
+            $("#errorMessages").empty();
+
+            var text = /^[0-9]+$/;
+            if (value != 0) {
+                if ((value != "") && (!text.test(value))) {
+
+                    writeErrorMsg("Please Enter Positive Numeric Values Only");
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+
+    </script>
+
+}
+
+

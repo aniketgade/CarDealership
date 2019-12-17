@@ -1,0 +1,66 @@
+﻿@model CarDealership.Models.Queries.VehicleDetails
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Vehicle Details</h2>
+
+<div class="GridBoxSearch row">
+    <div class="row">
+        <h4>@Model.Year @Model.Make @Model.Model</h4>
+        <div class="col-md-3">
+            <img src="@Url.Content("~/Images/Vehicles/" + Model.ImageFileName)">
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <label>Body Style:</label>
+                @Model.BodyStyle
+            </div>
+            <div class="row">
+                <label>Trans:</label>
+                @Model.Transmission
+            </div>
+            <div class="row">
+                <label>Color:</label>
+                @Model.Color
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <label>Interior:</label>
+                @Model.Interior
+            </div>
+            <div class="row">
+                <label>Mileage:</label>
+                @Model.Mileage
+            </div>
+            <div class="row">
+                <label>VIN:</label>
+                @Model.VIN
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <label>Sale Price:</label>
+                <span>@String.Format("{0:C}", @Model.SalePrice)</span>
+            </div>
+            <div class="row">
+                <label>MSRP:</label>
+                <span>@String.Format("{0:C}", @Model.MSRP)</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-3">
+            <label>Description:</label>
+            @Model.Description
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-9">
+            <input type="button" style="float:right" class="btn btn-default" value="Contact Us" onclick="@("window.location.href='" + @Url.Action("Contact", "Home", new {vin = Model.VIN }) + "'");" />
+
+        </div>
+    </div>
+</div>
+

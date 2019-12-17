@@ -1,0 +1,157 @@
+﻿@model CarDealership.Models.Queries.InventoryViewModel
+@{
+    ViewBag.Title = "New Vehicles";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+<div class="GridBoxSearch row">
+    <form id="searchForm" class="form-inline" role="form">
+        <div class="form-group" style="margin-right:20px">
+            <label for="quickSearch">Quick Search</label>
+            <input type="text" class="form-control" id="quickSearch" placeholder="Enter make, model or year">
+        </div>
+
+        <div class="form-group" style="margin-right:20px">
+            <label>Price</label>
+            @Html.DropDownList("minPrice", new SelectList(Model.SalePriceList), "No Min", new { @class = "form-control" })
+            @Html.DropDownList("maxPrice", new SelectList(Model.SalePriceList), "No Max", new { @class = "form-control" })
+        </div>
+
+
+        <div class="form-group" style="margin-right:20px">
+            <label>Year</label>
+            @Html.DropDownList("minYear", new SelectList(Model.YearList), "No Min", new { @class = "form-control" })
+            @Html.DropDownList("maxYear", new SelectList(Model.YearList), "No Max", new { @class = "form-control" })
+        </div>
+
+        <button id="btnSearch" class="btn btn-default">Search</button>
+    </form>
+</div>
+<br />
+
+<div class="row" id="searchResultsTitle"></div>
+<div id="searchResults">
+
+</div>
+
+@section Scripts{
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#searchForm').submit(function () {
+                search();
+                return false;
+            });
+        });
+
+
+        function search() {
+
+            var params;
+            var imagePath = '@Url.Content("~/Images/Vehicles/")';
+
+            params = 'MakeModelYear=' + $('#quickSearch').val() + '&MinPrice=' + $('#minPrice').val() + '&MaxPrice=' + $('#maxPrice').val() + '&MinYear=' + $('#minYear').val() + '&MaxYear=' + $('#maxYear').val() + '&Type=New';
+
+            $.ajax({
+                type: 'Get',
+                url: 'https://localhost:44395/api/vehicle/Search?' + params,
+                success: function (results) {
+
+
+
+                    $('#searchResultsTitle').empty();
+                    $('#searchResultsTitle').append('<h2>Search Results</h2>');
+                    $("#searchResults").empty();
+
+                    $.each(results, function (index, vehicle) {
+
+                        var msrpFormatted = formatMoney(vehicle.MSRP);
+                        var salePriceFormatted = formatMoney(vehicle.SalePrice);
+
+                        var html = `    <div class="GridBoxSearch row" >
+                <h4>${vehicle.Year} ${vehicle.Make} ${vehicle.Model}</h4>
+                <div class="col-md-3">
+
+                    <img src="${imagePath}${vehicle.ImageFileName}">
+                </div>
+                <div class="col-md-3">
+                    <div class="row">
+                        <label>Body Style:</label>
+                        ${vehicle.BodyStyle}
+                    </div>
+                    <div class="row">
+                        <label>Trans:</label>
+                        ${vehicle.Transmission}
+                    </div>
+                    <div class="row">
+                        <label>Color:</label>
+                        ${vehicle.Color}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="row">
+                        <label>Interior:</label>
+                        ${vehicle.Interior}
+                    </div>
+                    <div class="row">
+                        <label>Mileage:</label>
+                        ${vehicle.Mileage}
+                    </div>
+                    <div class="row">
+                        <label>VIN #:</label>
+                        ${vehicle.VIN}
+                    </div>
+
+                </div>
+                <div class="col-md-3">
+                <div class="row">
+                        <label>Sale Price:</label>
+                        ${salePriceFormatted}
+                    </div>
+                    <div class="row">
+                        <label>MSRP:</label>
+                        ${msrpFormatted}
+                    </div>
+                    <div class="row">
+                        <input type="button" class="btn btn-default" value="Details" onclick="details(${vehicle.VehicleId})" />
+                    </div>
+                </div>
+                </div>
+                    <br />`;
+
+                        $("#searchResults").append(html);
+                    });
+
+                },
+                error: function () {
+                    alert('Error performing search, try again later!');
+                }
+            });
+        }
+
+        function details(id) {
+            $.ajax({
+                type: 'Get',
+                url: '@Url.Action("Details","Inventory", new { id = "js-id"})'.replace("js-id", encodeURIComponent(id)),
+                success: function (results) {
+                    window.location.href = "Details/" + id;
+                },
+                error: function () {
+                    alert('Error getting Vehicle Details');
+                }
+            });
+        }
+
+        function formatMoney(number) {
+            return number.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+}
+
+
+    </script>
+
+}
+

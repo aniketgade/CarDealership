@@ -1,0 +1,90 @@
+﻿@model CarDealership.Models.Queries.InventoryReport
+@{
+    ViewBag.Title = "Inventory Report";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<br />
+
+<h4>New Vehicles</h4>
+
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="5%" style="text-align: center">Year</th>
+                <th width="10%" style="text-align: center">Make</th>
+                <th width="10%" style="text-align: center">Model</th>
+                <th width="5%" style="text-align: center">Count</th>
+                <th width="10%" style="text-align: center">Stock Value</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model.NewVehicles)
+            {
+                <tr>
+                    <td style="text-align: center">
+                        @item.Year
+                    </td>
+                    <td style="text-align: center">
+                        @item.Make
+                    </td>
+                    <td style="text-align: center">
+                        @item.Model
+                    </td>
+                    <td style="text-align: center">
+                        @item.Count
+                    </td>
+                    <td style="text-align: center">
+                        <span>@String.Format("{0:C}", @item.StockValue)</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<br />
+
+<h4>Used Vehicles</h4>
+
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="5%" style="text-align: center">Year</th>
+                <th width="10%" style="text-align: center">Make</th>
+                <th width="10%" style="text-align: center">Model</th>
+                <th width="5%" style="text-align: center">Count</th>
+                <th width="10%" style="text-align: center">Stock Value</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model.UsedVehicles)
+            {
+                <tr>
+                    <td style="text-align: center">
+                        @item.Year
+                    </td>
+                    <td style="text-align: center">
+                        @item.Make
+                    </td>
+                    <td style="text-align: center">
+                        @item.Model
+                    </td>
+                    <td style="text-align: center">
+                        @item.Count
+                    </td>
+                    <td style="text-align: center">
+                        <span>@String.Format("{0:C}", @item.StockValue)</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

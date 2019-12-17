@@ -1,0 +1,7 @@
+Default Logins provided with Seed
+
+admin@xxx.net / Password1 
+Sales1@xxx.net / Password1
+Sales2@xxx.net / Password1
+Sales3@xxx.net / Password1 
+Sales4@xxx.net / Password1 

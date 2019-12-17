@@ -1,0 +1,253 @@
+﻿@model CarDealership.Models.ViewModels.PurchaseViewModel
+@{
+    ViewBag.Title = "Purchase Vehicle";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="GridBoxSearch row">
+    <div class="row">
+        <h4>@Model.vehicle.Year @Model.vehicle.Make @Model.vehicle.Model</h4>
+        <div class="col-md-3">
+            <img src="@Url.Content("~/Images/Vehicles/" + Model.vehicle.ImageFileName)">
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <label>Body Style:</label>
+                @Model.vehicle.BodyStyle
+            </div>
+            <div class="row">
+                <label>Trans:</label>
+                @Model.vehicle.Transmission
+            </div>
+            <div class="row">
+                <label>Color:</label>
+                @Model.vehicle.Color
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <label>Interior:</label>
+                @Model.vehicle.Interior
+            </div>
+            <div class="row">
+                <label>Mileage:</label>
+                @Model.vehicle.Mileage
+            </div>
+            <div class="row">
+                <label>VIN:</label>
+                @Model.vehicle.VIN
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <label>Sale Price:</label>
+                <span>@String.Format("{0:C}", @Model.vehicle.SalePrice)</span>
+            </div>
+            <div class="row">
+                <label>MSRP:</label>
+                <span>@String.Format("{0:C}", @Model.vehicle.MSRP)</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-3">
+            <label>Description:</label>
+            @Model.vehicle.Description
+        </div>
+    </div>
+</div>
+
+<h2>Sales Information</h2>
+
+@using (Html.BeginForm("Purchase", "Sales", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <br />
+
+    @Html.ValidationSummary("", new { @class = "text-danger", id = "errorMessages" })
+
+    @Html.HiddenFor(m => m.saleLogViewModel.VehicleId, new { Value = @Model.vehicle.VehicleId })
+    @Html.HiddenFor(m => m.saleLogViewModel.SalePrice, new { Value = @Model.vehicle.SalePrice })
+    @Html.HiddenFor(m => m.saleLogViewModel.MSRP, new { Value = @Model.vehicle.MSRP })
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(m => m.saleLogViewModel.BuyerName, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.saleLogViewModel.BuyerName, new { @class = "form-control", id = "NameTextBox" })
+
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(m => m.saleLogViewModel.Phone, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.saleLogViewModel.Phone, new { @class = "form-control", id = "PhoneTextBox" })
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(m => m.saleLogViewModel.Email, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.saleLogViewModel.Email, new { @class = "form-control", id = "EmailTextBox" })
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(m => m.saleLogViewModel.Street1, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.saleLogViewModel.Street1, new { @class = "form-control", id = "Street1TextBox" })
+
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(m => m.saleLogViewModel.Street2, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.saleLogViewModel.Street2, new { @class = "form-control", id = "Street2TextBox" })
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(m => m.saleLogViewModel.City, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.saleLogViewModel.City, new { @class = "form-control", id = "CityTextBox" })
+
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(m => m.saleLogViewModel.State, new { @class = "control-label" })
+
+                @Html.DropDownListFor(m => m.saleLogViewModel.State,
+                       new List<SelectListItem>
+                       {
+                            new SelectListItem() {Text="Alabama", Value="AL"},
+        new SelectListItem() { Text="Alaska", Value="AK"},
+        new SelectListItem() { Text="Arizona", Value="AZ"},
+        new SelectListItem() { Text="Arkansas", Value="AR"},
+        new SelectListItem() { Text="California", Value="CA"},
+        new SelectListItem() { Text="Colorado", Value="CO"},
+        new SelectListItem() { Text="Connecticut", Value="CT"},
+        new SelectListItem() { Text="District of Columbia", Value="DC"},
+        new SelectListItem() { Text="Delaware", Value="DE"},
+        new SelectListItem() { Text="Florida", Value="FL"},
+        new SelectListItem() { Text="Georgia", Value="GA"},
+        new SelectListItem() { Text="Hawaii", Value="HI"},
+        new SelectListItem() { Text="Idaho", Value="ID"},
+        new SelectListItem() { Text="Illinois", Value="IL"},
+        new SelectListItem() { Text="Indiana", Value="IN"},
+        new SelectListItem() { Text="Iowa", Value="IA"},
+        new SelectListItem() { Text="Kansas", Value="KS"},
+        new SelectListItem() { Text="Kentucky", Value="KY"},
+        new SelectListItem() { Text="Louisiana", Value="LA"},
+        new SelectListItem() { Text="Maine", Value="ME"},
+        new SelectListItem() { Text="Maryland", Value="MD"},
+        new SelectListItem() { Text="Massachusetts", Value="MA"},
+        new SelectListItem() { Text="Michigan", Value="MI"},
+        new SelectListItem() { Text="Minnesota", Value="MN"},
+        new SelectListItem() { Text="Mississippi", Value="MS"},
+        new SelectListItem() { Text="Missouri", Value="MO"},
+        new SelectListItem() { Text="Montana", Value="MT"},
+        new SelectListItem() { Text="Nebraska", Value="NE"},
+        new SelectListItem() { Text="Nevada", Value="NV"},
+        new SelectListItem() { Text="New Hampshire", Value="NH"},
+        new SelectListItem() { Text="New Jersey", Value="NJ"},
+        new SelectListItem() { Text="New Mexico", Value="NM"},
+        new SelectListItem() { Text="New York", Value="NY"},
+        new SelectListItem() { Text="North Carolina", Value="NC"},
+        new SelectListItem() { Text="North Dakota", Value="ND"},
+        new SelectListItem() { Text="Ohio", Value="OH"},
+        new SelectListItem() { Text="Oklahoma", Value="OK"},
+        new SelectListItem() { Text="Oregon", Value="OR"},
+        new SelectListItem() { Text="Pennsylvania", Value="PA"},
+        new SelectListItem() { Text="Rhode Island", Value="RI"},
+        new SelectListItem() { Text="South Carolina", Value="SC"},
+        new SelectListItem() { Text="South Dakota", Value="SD"},
+        new SelectListItem() { Text="Tennessee", Value="TN"},
+        new SelectListItem() { Text="Texas", Value="TX"},
+        new SelectListItem() { Text="Utah", Value="UT"},
+        new SelectListItem() { Text="Vermont", Value="VT"},
+        new SelectListItem() { Text="Virginia", Value="VA"},
+        new SelectListItem() { Text="Washington", Value="WA"},
+        new SelectListItem() { Text="West Virginia", Value="WV"},
+        new SelectListItem() { Text="Wisconsin", Value="WI"},
+        new SelectListItem() { Text="Wyoming", Value="WY"}
+                       },
+                       new { @class = "form-control", id = "StateDropDownList" })
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(m => m.saleLogViewModel.ZipCode, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.saleLogViewModel.ZipCode, new { @class = "form-control", id = "ZipTextBox" })
+
+            </div>
+        </div>
+
+    </div>
+
+    <hr />
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(m => m.saleLogViewModel.PurchasePrice, new { @class = "control-label" })
+
+                @Html.TextBoxFor(m => m.saleLogViewModel.PurchasePrice, new { @class = "form-control", id = "PurchaseTextBox", Value = "" })
+
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(m => m.saleLogViewModel.PurchaseType, new { @class = "control-label" })
+
+                @Html.DropDownListFor(m => m.saleLogViewModel.PurchaseType,
+                       new List<SelectListItem>
+                       {
+                            new SelectListItem { Text="Bank Finance", Value="BankFinance", Selected=true },
+                            new SelectListItem { Text="Cash", Value="Cash" },
+                            new SelectListItem { Text="Dealer Finance", Value="DealerFinance" },
+                       },
+                       new { @class = "form-control", id = "PurchaseTypeDropdown" })
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <input type="submit" class="btn btn-default" value="Save" />
+        </div>
+    </div>
+}
+

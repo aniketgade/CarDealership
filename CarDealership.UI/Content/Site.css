@@ -1,0 +1,76 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.jumbotron {
+    background-color: aquamarine;
+    color: orangered;
+    text-align: center;
+    height: 250px;
+}
+
+.GridContainerHome {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 20px;
+}
+
+.GridBoxHome {
+    padding: 20px;
+    border-style: solid;
+    text-align: center;
+    font-size: medium;
+}
+
+.GridContainerSpecials {
+    display: grid;
+    grid-template-columns: auto;
+    grid-gap: 20px;
+}
+
+.GridBoxSpecials {
+    padding: 20px;
+    border-style: solid;
+    text-align: left;
+    font-size: medium;
+}
+
+.GridBoxSearch {
+    padding: 20px;
+    border-style: solid;
+    text-align: left;
+    
+}
+
+.GridBoxMakes {
+    padding: 20px;
+    border-style: solid;
+    text-align: left;
+}
+
+img {
+    max-height: 100%;
+    max-width: 100%;
+}
+

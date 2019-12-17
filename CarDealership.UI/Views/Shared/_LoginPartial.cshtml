@@ -1,0 +1,15 @@
+﻿@using Microsoft.AspNet.Identity
+@if (User.IsInRole("Admin"))
+{
+    <li>@Html.ActionLink("Sales", "Index", "Sales")</li>
+    <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
+
+}
+
+@if (User.IsInRole("Sales"))
+{
+    <li>@Html.ActionLink("Sales", "Index", "Sales")</li>
+}
+
+
+

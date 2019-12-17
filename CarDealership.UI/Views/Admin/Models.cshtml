@@ -1,0 +1,146 @@
+﻿@model CarDealership.Models.ViewModels.AddModelViewModel
+@{
+    ViewBag.Title = "Models";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="GridBoxMakes">
+    @using (Html.BeginForm("Models", "Admin", FormMethod.Post, new { @class = "form-inline", role = "form" }))
+    {
+
+        <div class="form-group" style="padding-right:25px">
+            @Html.LabelFor(m => m.ModelName, new { @class = "control-label", @style = "padding-right:5px" })
+
+            @Html.TextBoxFor(m => m.ModelName, new { @class = "form-control", @style = "width:300px", Value="" })
+
+        </div>
+
+        <div class="form-group" style="padding-right:25px">
+            @Html.LabelFor(m => m.MakeName, new { @class = "control-label", @style = "padding-right:5px" })
+
+            @Html.DropDownListFor(m => m.MakeName,
+                       Enumerable.Empty<SelectListItem>(),
+                       new { @class = "form-control", id = "MakeDropDownList", style = "width:300px" })
+        </div>
+
+
+        <div class="form-group">
+
+            <input type="submit" class="btn btn-default" value="Save" />
+
+        </div>
+
+    }
+</div>
+
+<br />
+<br />
+
+<div id="makeTableDiv">
+    <table class="table table-bordered" id="dvdTable">
+        <thead>
+            <tr>
+                <th width="30%" style="text-align: center">Make</th>
+                <th width="30%" style="text-align: center">Model</th>
+                <th width="15%" style="text-align: center">Date Added</th>
+                <th width="25%" style="text-align: center">User</th>
+            </tr>
+        </thead>
+
+        <tbody id="contentRows">
+            <!--This holds the list of makes - we will add rows dynamically using jQuery -->
+        </tbody>
+
+    </table>
+</div>
+@section Scripts{
+
+    <script>
+
+        $(document).ready(function () {
+
+            loadMakeDropdown();
+            loadModelTable();
+        });
+
+        function loadMakeDropdown() {
+
+             var makeDropdown = $("#MakeDropDownList");
+             var modelDropDown = $('#ModelDropDownList');
+
+
+            $.ajax({
+                type: 'GET',
+                url: 'https://localhost:44395/api/vehicle/makes',
+                success: function (makeArray) {
+                    makeDropdown.empty();
+                    modelDropDown.empty();
+
+                    $.each(makeArray, function (index, make) {
+
+                            makeDropdown.append(new Option(make, make));
+                    });
+
+                },
+                error: function () {
+                    writeErrorMsg('Error calling web service for getting list of makes. Please try again later.');
+
+                }
+            });
+        }
+
+        function loadModelTable() {
+
+            var contentRows = $('#contentRows');
+            contentRows.empty();
+
+            $.ajax({
+                type: 'Get',
+                url: 'https://localhost:44395/api/vehicle/modelDetails',
+                success: function (modelList) {
+                    $.each(modelList, function (index, model) {
+                        var makeName = model.MakeName;
+                        var modelName = model.ModelName;
+                        var dateAdded = formatDate(model.DateAdded);
+                        var user = model.UserEmail;
+
+
+                        var row = '<tr>';
+                        row += '<td style="text-align: center">' + makeName + '</td>';
+                        row += '<td style="text-align: center">' + modelName + '</td>';
+                        row += '<td style="text-align: center">' + dateAdded + '</td>';
+                        row += '<td style="text-align: center">' + user + '</td>';
+                        row += '</tr>';
+
+                        contentRows.append(row);
+                    })
+
+
+                },
+                error: function () {
+                    $('#errorMessages').append($('<li>').attr({ class: 'list-group-item list-group-item-danger' }).text('Error calling web service. Please try again later.'));
+                }
+            });
+        }
+
+        function formatDate(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            return [month, day, year].join('-');
+        }
+
+    </script>
+
+
+
+
+}

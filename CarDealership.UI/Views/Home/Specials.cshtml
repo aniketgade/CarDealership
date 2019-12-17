@@ -1,0 +1,19 @@
+﻿@model List<CarDealership.Models.Tables.Special>
+@{
+    ViewBag.Title = "Specials";
+}
+
+<h1>Specials</h1>
+
+<br />
+<div class="GridContainerSpecials">
+    @foreach (var special in @Model)
+    {
+
+        <div class="GridBoxSpecials">
+            <h3>@special.Title</h3>
+            <p>@special.Description</p>
+        </div>
+
+    }
+</div>

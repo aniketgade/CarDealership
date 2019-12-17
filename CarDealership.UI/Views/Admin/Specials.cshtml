@@ -1,0 +1,108 @@
+﻿@model CarDealership.Models.Tables.Special
+@{
+    ViewBag.Title = "Specials";
+}
+
+<h1>Specials</h1>
+
+<div class="GridBoxSpecials">
+    @using (Html.BeginForm("Specials", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.Title, new { @class = "control-label" })
+
+            @Html.TextBoxFor(m => m.Title, new { id = "TitleTextBox", @class = "form-control", required = "required" })
+
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Description, new { @class = "control-label" })
+
+            @Html.TextAreaFor(m => m.Description, 6, 20, new { @class = "form-control", required = "required", id = "DescriptionArea" })
+
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-default" value="Save" />
+
+        </div>
+    }
+</div>
+
+<br />
+<div class="GridContainerSpecials" id="SpecialsDiv">
+
+</div>
+
+
+@section Scripts {
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            resetForm();
+
+            loadSpecialList();
+
+        });
+
+        function resetForm() {
+
+            $('#DescriptionArea').empty();
+            $('#TitleTextBox').val('');
+
+        }
+
+        function loadSpecialList() {
+
+            clearSpecialList();
+
+            var specialsDiv = $('#SpecialsDiv');
+
+            $.ajax({
+                type: 'Get',
+                url: 'https://localhost:44395/api/vehicle/specials',
+                success: function (specialList) {
+                    $.each(specialList, function (index, special) {
+
+                        var row = '<div class="GridBoxSpecials">';
+                        row += '<font size="+2">' + special.Title + '</font>';
+                        row += '<input type="button" class="btn btn-danger" value="Delete" onclick="deleteSpecial(' + special.SpecialId + ')" style="float: right;" />';
+                        row += '<p>' + special.Description + '</p>';
+
+                        specialsDiv.append(row);
+                    })
+
+
+                },
+                error: function () {
+                    $('#errorMessages').append($('<li>').attr({ class: 'list-group-item list-group-item-danger' }).text('Error calling web service. Please try again later.'));
+                }
+            });
+
+        }
+
+        function clearSpecialList() {
+            $('#SpecialsDiv').empty();
+        }
+
+        function deleteSpecial(id) {
+            if (!confirm("Are you sure you want to delete this Special?")) {
+                return false;
+            }
+
+            $.ajax({
+                type: 'DELETE',
+                url: 'https://localhost:44395/api/vehicle/deletespecial/' + id,
+                success: function () {
+                    window.location.href = "Specials";
+                }
+
+            });
+        }
+
+    </script>
+
+}
